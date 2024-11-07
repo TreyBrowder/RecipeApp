@@ -14,6 +14,7 @@ protocol Networkable {
 //provides a default implementation to the fetchData function in the DataDownloaderProtocol
 extension Networkable {
     func fetchData<T: Decodable>(as type: T.Type, endpoint: String) async throws -> T {
+        print(endpoint)
         guard let url = URL(string: endpoint) else {
             throw APIError.requestFailed(msg: "Invalid URL")
         }

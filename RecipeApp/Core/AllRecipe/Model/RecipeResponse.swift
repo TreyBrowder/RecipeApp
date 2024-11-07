@@ -8,17 +8,17 @@
 import Foundation
 
 struct RecipeResponse: Decodable {
-    let recipe: [Recipe]
+    let recipes: [Recipe]
 }
 
 struct Recipe: Identifiable, Decodable, Hashable {
     let id: String
     let cuisine: String
     let name: String
-    let imgLRG: String
-    let imgSM: String
-    let source: String
-    let videoStr: String
+    let imgLRG: String?
+    let imgSM: String?
+    let source: String?
+    let videoStr: String?
     
     enum CodingKeys: String, CodingKey {
         case cuisine, name

@@ -11,7 +11,7 @@ import SwiftUI
 struct RecipeApp: App {
     var body: some Scene {
         WindowGroup {
-            AllRecipeView()
+            AllRecipeView(service: RecipeService())
         }
     }
 }

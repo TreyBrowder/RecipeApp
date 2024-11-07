@@ -8,17 +8,30 @@
 import SwiftUI
 
 struct AllRecipeView: View {
+    @StateObject var recipeVM: RecipeViewModel
+    
+    init(service: RecipeProtocol){
+        _recipeVM = StateObject(wrappedValue: RecipeViewModel(service: service))
+    }
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack() {
+            List {
+                ForEach(recipeVM.recipeArr) { recipe in
+                    NavigationLink(value: recipe) {
+                        HStack {
+                            Text(recipe.name)
+                        }
+                    }
+                }
+            }
         }
-        .padding()
+        .task {
+            await recipeVM.getRecipes()
+        }
     }
 }
 
 #Preview {
-    AllRecipeView()
+    AllRecipeView(service: RecipeService())
 }
