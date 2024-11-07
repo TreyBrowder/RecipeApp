@@ -68,6 +68,35 @@ struct AllRecipeView: View {
                 .navigationTitle(recipe.name)
                 .navigationBarTitleDisplayMode(.inline)
             }
+            .overlay {
+                if let error = recipeVM.errorMsg {
+                    if #available(iOS 17.0, *) {
+                        VStack(alignment: .center, spacing: 6) {
+                            Image(systemName: "exclamationmark.octagon")
+                            
+                            Text(error)
+                                .font(.system(size: 26))
+                                .fontWeight(.semibold)
+                        }
+                        .containerRelativeFrame([.horizontal, .vertical])
+                        .background(Color(.darkGray))
+                    } else {
+                        // Fallback on earlier versions
+                        GeometryReader { geometry in
+                            VStack(alignment: .center, spacing: 6) {
+                                Image(systemName: "exclamationmark.octagon")
+                                
+                                Text(error)
+                                    .font(.system(size: 26))
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .background(Color(.darkGray))
+                        }
+                        .ignoresSafeArea(.all)
+                    }
+                }
+            }
         }
         .task {
             await recipeVM.getRecipes()
