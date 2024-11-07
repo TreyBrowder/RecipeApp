@@ -10,6 +10,7 @@ import UIKit
 class RecipeViewModel: ObservableObject {
     @Published var recipeArr = [Recipe]()
     @Published var errorMsg: String?
+    @Published var isLoading = false
     
     private var service: RecipeProtocol
     
@@ -19,15 +20,25 @@ class RecipeViewModel: ObservableObject {
     
     @MainActor
     func getRecipes() async {
+        //Prevent fetching if already loading
+        guard !isLoading else { return }
+        isLoading = true
+        
         do {
             let result = try await service.fetchRecipe()
             recipeArr = result.recipes
+            //Clear any previous error
+            errorMsg = nil
         } catch {
             guard let error = error as? APIError else { return }
             print(error.description)
             self.errorMsg = error.description
         }
+        
+        isLoading = false
     }
+    
+//MARK: HELPERS
     
     private func isRecipeAvailable(for recipe: Recipe) -> Bool {
         return recipe.source != nil
@@ -42,7 +53,7 @@ class RecipeViewModel: ObservableObject {
     func unavailableText(for recipe: Recipe) -> String? {
         let recipeAvailable = isRecipeAvailable(for: recipe)
         let tutorialAvailable = isTutorialAvailable(for: recipe)
-
+        
         switch (recipeAvailable, tutorialAvailable) {
         case (false, false):
             return "Recipe and tutorial unavailable"
@@ -55,7 +66,7 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    ///Open URL to website 
+    ///Open URL to website
     func openLink(urlString: String?) {
         guard let urlString = urlString, let url = URL(string: urlString) else {
             return
