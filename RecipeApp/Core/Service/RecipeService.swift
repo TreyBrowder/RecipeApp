@@ -11,9 +11,9 @@ protocol RecipeProtocol {
     func fetchRecipe() async throws -> RecipeResponse
 }
 
-final class RecipeService: RecipeProtocol, Networkable {
+class RecipeService: RecipeProtocol, Networkable {
     
-//MARK: - URL Related variables/functions
+//MARK: - URL Related variables
     private var recipeUrl: String? {
         var components = URLComponents()
         
@@ -24,8 +24,7 @@ final class RecipeService: RecipeProtocol, Networkable {
         return components.url?.absoluteString
     }
     
-//MARK: - Fetch Data Methods
-    
+//MARK: - Fetch Data Method
     ///Asychronous function to retreive dessert data from API
     func fetchRecipe() async throws -> RecipeResponse {
         guard let endpoint = recipeUrl else {
@@ -34,19 +33,4 @@ final class RecipeService: RecipeProtocol, Networkable {
         
         return try await fetchData(as: RecipeResponse.self, endpoint: endpoint)
     }
-    
-    ///Asychronous function to retreive dessert details data from API
-//    func fetchDessertDetails(id: String) async throws -> DessertDetails {
-//        if let cached = DessertDetailsCache.shared.get(key: id) {
-//            return cached
-//        }
-//        
-//        guard let endpoint = dessertDetailsUrlString(id: id) else {
-//            throw DessertAPIError.requestFailed(description: "Invalid URL")
-//        }
-//        
-//        let details = try await fetchData(as: DessertDetails.self, endpoint: endpoint)
-//        DessertDetailsCache.shared.set(dessertDetails: details, key: id)
-//        return details
-//    }
 }
