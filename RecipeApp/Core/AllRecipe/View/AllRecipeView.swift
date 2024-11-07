@@ -25,6 +25,12 @@ struct AllRecipeView: View {
                     }
                 }
             }
+            .navigationDestination(for: Recipe.self) { recipe in
+                VStack(){
+                    Text(recipe.name)
+                    Text(recipe.name)
+                }
+            }
         }
         .task {
             await recipeVM.getRecipes()

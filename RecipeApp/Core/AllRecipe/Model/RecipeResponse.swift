@@ -15,8 +15,8 @@ struct Recipe: Identifiable, Decodable, Hashable {
     let id: String
     let cuisine: String
     let name: String
-    let imgLRG: String?
-    let imgSM: String?
+    let imgLRG: String
+    let imgSM: String
     let source: String?
     let videoStr: String?
     
