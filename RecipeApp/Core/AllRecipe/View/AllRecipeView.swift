@@ -20,16 +20,52 @@ struct AllRecipeView: View {
                 ForEach(recipeVM.recipeArr) { recipe in
                     NavigationLink(value: recipe) {
                         HStack {
+                            RecipeImgView(url: recipe.imgSM)
+                                .frame(width: 48, height: 48)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(.primary, lineWidth: 2))
+                            
                             Text(recipe.name)
                         }
                     }
                 }
             }
+            .navigationTitle("Recipes")
             .navigationDestination(for: Recipe.self) { recipe in
                 VStack(){
-                    Text(recipe.name)
-                    Text(recipe.name)
+                    RecipeImgView(url: recipe.imgLRG)
+                        .frame(width: 224, height: 224)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(.primary, lineWidth: 2))
+                    
+                    
+                    HStack(){
+                        Text("Orgin:")
+                        
+                        Text(recipe.cuisine)
+                            .bold()
+                    }
+                    .font(.largeTitle)
+                    
+                    HStack {
+                        if let source = recipe.source,
+                           let videoLink = recipe.videoStr {
+                            Button("Recipe"){
+                                // go to website of the original recipe
+                                    //using source
+                            }
+                            .customSmallBtn()
+                            
+                            Button("Tutorial"){
+                                // go to youtube link
+                                    //using videoLink
+                            }
+                            .customSmallBtn()
+                        }
+                    }
+                    
                 }
+                .navigationTitle(recipe.name)
             }
         }
         .task {
