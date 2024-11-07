@@ -33,7 +33,7 @@ struct AllRecipeView: View {
             .navigationTitle("Recipes")
             .hideBackButtonTitle()
             .navigationDestination(for: Recipe.self) { recipe in
-                RecipeDetails(recipe: recipe)
+                RecipeDetails(recipeVM: recipeVM, recipe: recipe)
                     .navigationTitle(recipe.name)
                     .navigationBarTitleDisplayMode(.inline)
             }
@@ -44,32 +44,15 @@ struct AllRecipeView: View {
         .overlay {
             if let error = recipeVM.errorMsg {
                 if #available(iOS 17.0, *) {
-                    VStack(alignment: .center, spacing: 10) {
-                        Image(systemName: "exclamationmark.octagon")
-                            .resizable()
-                            .frame(width: 64, height: 64)
-                            .foregroundStyle(.red)
-                        
-                        Text(error)
-                            .font(.system(size: 26))
-                            .fontWeight(.semibold)
-                            .multilineTextAlignment(.center)
-                    }
-                    .containerRelativeFrame([.horizontal, .vertical])
-                    .background(Color(.darkGray))
+                    ErrorView(errorStr: error)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                        .background(Color(.darkGray))
                 } else {
                     // Fallback on earlier versions
                     GeometryReader { geometry in
-                        VStack(alignment: .center, spacing: 6) {
-                            Image(systemName: "exclamationmark.octagon")
-                            
-                            Text(error)
-                                .font(.system(size: 26))
-                                .fontWeight(.semibold)
-                                .multilineTextAlignment(.center)
-                        }
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .background(Color(.darkGray))
+                        ErrorView(errorStr: error)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .background(Color(.darkGray))
                     }
                     .ignoresSafeArea(.all)
                 }
@@ -81,4 +64,3 @@ struct AllRecipeView: View {
 #Preview {
     AllRecipeView(service: RecipeService())
 }
-

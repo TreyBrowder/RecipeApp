@@ -23,7 +23,7 @@ struct Recipe: Identifiable, Decodable, Hashable {
     enum CodingKeys: String, CodingKey {
         case cuisine, name
         case id = "uuid"
-        case imgLRG = "photo_ur_large"
+        case imgLRG = "photo_url_large"
         case imgSM = "photo_url_small"
         case source = "source_url"
         case videoStr = "youtube_url"

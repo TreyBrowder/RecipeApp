@@ -5,7 +5,6 @@
 //  Created by Trey Browder on 11/7/24.
 //
 
-import Foundation
 import UIKit
 
 class RecipeViewModel: ObservableObject {
@@ -30,28 +29,33 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    func isRecipeAvailable(for recipe: Recipe) -> Bool {
+    private func isRecipeAvailable(for recipe: Recipe) -> Bool {
         return recipe.source != nil
     }
     
     //Check if tutorial is available
-    func isTutorialAvailable(for recipe: Recipe) -> Bool {
+    private func isTutorialAvailable(for recipe: Recipe) -> Bool {
         return recipe.videoStr != nil
     }
     
     ///Dynamic unavailable text for Recipe / Tutorial
     func unavailableText(for recipe: Recipe) -> String? {
-        if !isRecipeAvailable(for: recipe) && !isTutorialAvailable(for: recipe) {
+        let recipeAvailable = isRecipeAvailable(for: recipe)
+        let tutorialAvailable = isTutorialAvailable(for: recipe)
+
+        switch (recipeAvailable, tutorialAvailable) {
+        case (false, false):
             return "Recipe and tutorial unavailable"
-        } else if !isRecipeAvailable(for: recipe) {
+        case (false, true):
             return "Recipe unavailable"
-        } else if !isTutorialAvailable(for: recipe) {
+        case (true, false):
             return "Tutorial unavailable"
+        default:
+            return nil
         }
-        return nil
     }
     
-    ///Open URL
+    ///Open URL to website 
     func openLink(urlString: String?) {
         guard let urlString = urlString, let url = URL(string: urlString) else {
             return
