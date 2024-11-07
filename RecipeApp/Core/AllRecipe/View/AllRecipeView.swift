@@ -31,6 +31,7 @@ struct AllRecipeView: View {
                 }
             }
             .navigationTitle("Recipes")
+            .hideBackButtonTitle()
             .navigationDestination(for: Recipe.self) { recipe in
                 VStack(){
                     RecipeImgView(url: recipe.imgLRG)
@@ -48,24 +49,24 @@ struct AllRecipeView: View {
                     .font(.largeTitle)
                     
                     HStack {
-                        if let source = recipe.source,
-                           let videoLink = recipe.videoStr {
-                            Button("Recipe"){
-                                // go to website of the original recipe
-                                    //using source
+                        if let source = recipe.source {
+                                Button("Recipe") {
+                                    // Go to website of the original recipe using source
+                                }
+                                .customSmallBtn()
                             }
-                            .customSmallBtn()
                             
-                            Button("Tutorial"){
-                                // go to youtube link
-                                    //using videoLink
+                            if let videoLink = recipe.videoStr {
+                                Button("Tutorial") {
+                                    // Go to YouTube link using videoLink
+                                }
+                                .customSmallBtn()
                             }
-                            .customSmallBtn()
-                        }
                     }
                     
                 }
                 .navigationTitle(recipe.name)
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
         .task {

@@ -20,9 +20,3 @@ struct CustomBttn: ViewModifier {
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
-
-extension View {
-    public func customSmallBtn() -> some View {
-        self.modifier(CustomBttn())
-    }
-}
