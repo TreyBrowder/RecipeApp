@@ -49,21 +49,22 @@ struct AllRecipeView: View {
                     .font(.largeTitle)
                     
                     HStack {
-                        if let source = recipe.source {
+                        if let source = recipe.source,
+                           let url = URL(string: source){
                                 Button("Recipe") {
-                                    // Go to website of the original recipe using source
+                                    UIApplication.shared.open(url)
                                 }
                                 .customSmallBtn()
                             }
                             
-                            if let videoLink = recipe.videoStr {
+                            if let videoLink = recipe.videoStr,
+                               let url = URL(string: videoLink){
                                 Button("Tutorial") {
-                                    // Go to YouTube link using videoLink
+                                    UIApplication.shared.open(url)
                                 }
                                 .customSmallBtn()
                             }
                     }
-                    
                 }
                 .navigationTitle(recipe.name)
                 .navigationBarTitleDisplayMode(.inline)
@@ -73,10 +74,14 @@ struct AllRecipeView: View {
                     if #available(iOS 17.0, *) {
                         VStack(alignment: .center, spacing: 6) {
                             Image(systemName: "exclamationmark.octagon")
+                                .resizable()
+                                .frame(width: 64, height: 64)
+                                .foregroundStyle(.red)
                             
                             Text(error)
                                 .font(.system(size: 26))
                                 .fontWeight(.semibold)
+                                .multilineTextAlignment(.center)
                         }
                         .containerRelativeFrame([.horizontal, .vertical])
                         .background(Color(.darkGray))
@@ -89,6 +94,7 @@ struct AllRecipeView: View {
                                 Text(error)
                                     .font(.system(size: 26))
                                     .fontWeight(.semibold)
+                                    .multilineTextAlignment(.center)
                             }
                             .frame(width: geometry.size.width, height: geometry.size.height)
                             .background(Color(.darkGray))
