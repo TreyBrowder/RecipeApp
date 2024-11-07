@@ -30,6 +30,11 @@ struct AllRecipeView: View {
                     }
                 }
             }
+            .refreshable {
+                //This is where any update to the data would happen by fetching more recipes
+                await recipeVM.getRecipes(isRefreshing: true)
+                
+            }
             .navigationTitle("Recipes")
             .hideBackButtonTitle()
             .navigationDestination(for: Recipe.self) { recipe in
@@ -39,7 +44,7 @@ struct AllRecipeView: View {
             }
         }
         .task {
-            await recipeVM.getRecipes()
+            await recipeVM.getRecipes(isRefreshing: false)
         }
         .overlay {
             if let error = recipeVM.errorMsg {

@@ -19,22 +19,30 @@ class RecipeViewModel: ObservableObject {
     }
     
     @MainActor
-    func getRecipes() async {
-        //Prevent fetching if already loading
+    func getRecipes(isRefreshing: Bool) async {
+        // If already loading, don't initiate another fetch
         guard !isLoading else { return }
+        
+        // Set loading state
         isLoading = true
         
         do {
+            // Fetch the recipes
             let result = try await service.fetchRecipe()
+            
+            // If it's a refresh, clear previous error
+            if isRefreshing {
+                errorMsg = nil
+            }
+            
             recipeArr = result.recipes
-            //Clear any previous error
-            errorMsg = nil
         } catch {
-            guard let error = error as? APIError else { return }
-            print(error.description)
-            self.errorMsg = error.description
+            if let apiError = error as? APIError {
+                errorMsg = apiError.description
+            }
         }
         
+        // Reset loading state
         isLoading = false
     }
     
