@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class RecipeViewModel: ObservableObject {
     @Published var recipeArr = [Recipe]()
@@ -27,5 +28,34 @@ class RecipeViewModel: ObservableObject {
             print(error.description)
             self.errorMsg = error.description
         }
+    }
+    
+    func isRecipeAvailable(for recipe: Recipe) -> Bool {
+        return recipe.source != nil
+    }
+    
+    //Check if tutorial is available
+    func isTutorialAvailable(for recipe: Recipe) -> Bool {
+        return recipe.videoStr != nil
+    }
+    
+    ///Dynamic unavailable text for Recipe / Tutorial
+    func unavailableText(for recipe: Recipe) -> String? {
+        if !isRecipeAvailable(for: recipe) && !isTutorialAvailable(for: recipe) {
+            return "Recipe and tutorial unavailable"
+        } else if !isRecipeAvailable(for: recipe) {
+            return "Recipe unavailable"
+        } else if !isTutorialAvailable(for: recipe) {
+            return "Tutorial unavailable"
+        }
+        return nil
+    }
+    
+    ///Open URL
+    func openLink(urlString: String?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            return
+        }
+        UIApplication.shared.open(url)
     }
 }
