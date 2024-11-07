@@ -17,7 +17,7 @@ struct AllRecipeView: View {
     var body: some View {
         NavigationStack() {
             List {
-                ForEach(recipeVM.recipeArr) { recipe in
+                ForEach(recipeVM.recipeArr) { recipe in // currently hold 63 items 
                     NavigationLink(value: recipe) {
                         HStack {
                             RecipeImgView(url: recipe.imgSM)

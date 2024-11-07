@@ -11,21 +11,21 @@ class ImageLoader: ObservableObject {
     @Published var image: Image?
     
     private let urlString: String
-    
     init(urlString: String) {
         self.urlString = urlString
         
         Task { try await loadImage() }
+        
     }
     
     @MainActor
     private func loadImage() async throws {
-        
         if let cached = ImageCache.shared.get(key: urlString) {
             self.image = Image(uiImage: cached)
+            print("cached")
             return
         }
-        
+        print("Data")
         guard let url = URL(string: urlString) else { return }
         let (data, response) = try await URLSession.shared.data(from: url)
         

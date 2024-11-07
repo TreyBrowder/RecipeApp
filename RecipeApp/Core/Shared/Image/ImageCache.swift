@@ -9,18 +9,47 @@ import UIKit
 
 class ImageCache {
     static let shared = ImageCache()
+    private let fileManager = FileManager.default
+    private let cacheDirectory: URL
     
-    private let cache = NSCache<NSString, UIImage>()
-    
-    private init() { }
-    
-    ///Function to set image in memory in cache by key
-    func set(image: UIImage, key: String) {
-        cache.setObject(image, forKey: key as NSString)
+    private init() {
+        // Setup a directory within the caches directory
+        if let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            cacheDirectory = cachesDirectory.appendingPathComponent("ImageCache")
+            
+            // Create the directory if it doesn't exist
+            if !fileManager.fileExists(atPath: cacheDirectory.path) {
+                try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+            }
+        } else {
+            fatalError("Failed to locate caches directory")
+        }
     }
     
-    ///Function to get image by key from in memory cache
+    /// Saves the image to disk with a specified key
+    func set(image: UIImage, key: String) {
+        guard let data = image.jpegData(compressionQuality: 1.0) else { return }
+        let fileURL = cacheDirectory.appendingPathComponent(key.toValidFileName())
+        
+        do {
+            try data.write(to: fileURL)
+        } catch {
+            print("Failed to save image to disk: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Retrieves the image from disk with a specified key
     func get(key: String) -> UIImage? {
-        return cache.object(forKey: key as NSString)
+        let fileURL = cacheDirectory.appendingPathComponent(key.toValidFileName())
+        guard let data = try? Data(contentsOf: fileURL),
+              let image = UIImage(data: data) else { return nil }
+        return image
+    }
+}
+
+private extension String {
+    /// Converts string to a valid file name by removing or replacing invalid characters
+    func toValidFileName() -> String {
+        return self.replacingOccurrences(of: "[^a-zA-Z0-9_]", with: "-", options: .regularExpression)
     }
 }

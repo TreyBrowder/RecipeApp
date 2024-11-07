@@ -18,9 +18,14 @@ struct RecipeImgView: View {
         if let image = imageLoader.image {
             image
                 .resizable()
+        } else {
+            // Placeholder view while the image is loading
+            ProgressView()
+                .frame(width: 48, height: 48)
         }
     }
 }
+
 #Preview {
     RecipeImgView(url: "https://d3jbb8n5wk0qxi.cloudfront.net/photos/8f60cd87-20ab-419b-a425-56b7ad7c8566/small.jpg")
 }
