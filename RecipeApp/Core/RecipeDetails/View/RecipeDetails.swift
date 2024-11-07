@@ -33,7 +33,7 @@ struct RecipeDetails: View {
             }
             .font(.system(size: 24))
             
-            // Dynamic text for unavailable Recipe/Tutorial
+            //text if Recipe/Tutorial unavailable
             if let unavailableText = recipeVM.unavailableText(for: recipe) {
                 Text(unavailableText)
                     .font(.system(size: 22))
@@ -42,19 +42,15 @@ struct RecipeDetails: View {
             }
             
             HStack {
-                if let source = recipe.source,
-                   let url = URL(string: source){
+                if let source = recipe.source {
                     Button("Recipe") {
-                        //                        UIApplication.shared.open(url)
                         recipeVM.openLink(urlString: source)
                     }
                     .customSmallBtn()
                 }
                 
-                if let videoLink = recipe.videoStr,
-                   let url = URL(string: videoLink){
+                if let videoLink = recipe.videoStr {
                     Button("Tutorial") {
-                        //                        UIApplication.shared.open(url)
                         recipeVM.openLink(urlString: videoLink)
                     }
                     .customSmallBtn()
@@ -75,15 +71,3 @@ struct RecipeDetails: View {
                                  source: "https://www.bbcgoodfood.com/recipes/778642/apple-and-blackberry-crumble",
                                  videoStr: "https://www.youtube.com/watch?v=4vhcOwVBDO4"))
 }
-
-/*
- {
- "cuisine": "British",
- "name": "Apple & Blackberry Crumble",
- "photo_url_large": "https://d3jbb8n5wk0qxi.cloudfront.net/photos/535dfe4e-5d61-4db6-ba8f-7a27b1214f5d/large.jpg",
- "photo_url_small": "https://d3jbb8n5wk0qxi.cloudfront.net/photos/535dfe4e-5d61-4db6-ba8f-7a27b1214f5d/small.jpg",
- "source_url": "https://www.bbcgoodfood.com/recipes/778642/apple-and-blackberry-crumble",
- "uuid": "599344f4-3c5c-4cca-b914-2210e3b3312f",
- "youtube_url": "https://www.youtube.com/watch?v=4vhcOwVBDO4"
- }
- */
