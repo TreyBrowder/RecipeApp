@@ -11,8 +11,17 @@ class RecipeViewModel: ObservableObject {
     @Published var recipeArr = [Recipe]()
     @Published var errorMsg: String?
     @Published var isLoading = false
+    @Published var searchedText = ""
     
     private var service: RecipeProtocol
+    
+    ///Filtering searched text functionality
+    var filteredMeals: [Recipe] {
+        guard !searchedText.isEmpty else { return recipeArr }
+        return recipeArr.filter { recipe in
+            recipe.name.lowercased().contains(searchedText.lowercased())
+        }
+    }
     
     init(service: RecipeProtocol) {
         self.service = service
@@ -20,29 +29,29 @@ class RecipeViewModel: ObservableObject {
     
     @MainActor
     func getRecipes(isRefreshing: Bool) async {
-        // If already loading, don't initiate another fetch
+        
         guard !isLoading else { return }
         
-        // Set loading state
         isLoading = true
         
         do {
-            // Fetch the recipes
-            let result = try await service.fetchRecipe()
+            let result = try await service.fetchRecipes()
             
-            // If it's a refresh, clear previous error
             if isRefreshing {
                 errorMsg = nil
             }
             
-            recipeArr = result.recipes
+            if !result.recipes.isEmpty {
+                recipeArr = result.recipes
+            } else {
+                throw APIError.EmptyData(msg: "No Recipes Available at this time")
+            }
         } catch {
             if let apiError = error as? APIError {
                 errorMsg = apiError.description
             }
         }
         
-        // Reset loading state
         isLoading = false
     }
     

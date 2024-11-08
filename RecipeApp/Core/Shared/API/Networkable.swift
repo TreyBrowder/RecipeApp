@@ -30,8 +30,9 @@ extension Networkable {
         }
         
         do {
-            return try JSONDecoder().decode(type, from: data)
-           
+           return try JSONDecoder().decode(type, from: data)
+            
+
         } catch {
             print("DEBUG - Service ERROR: \(error)")
             throw error as? APIError ?? .unknownError(error: error)

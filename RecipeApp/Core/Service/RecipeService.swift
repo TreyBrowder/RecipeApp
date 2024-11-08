@@ -8,7 +8,7 @@
 import Foundation
 
 protocol RecipeProtocol {
-    func fetchRecipe() async throws -> RecipeResponse
+    func fetchRecipes() async throws -> RecipeResponse
 }
 
 class RecipeService: RecipeProtocol, Networkable {
@@ -26,7 +26,7 @@ class RecipeService: RecipeProtocol, Networkable {
     
 //MARK: - Fetch Data Method
     ///Asychronous function to retreive dessert data from API
-    func fetchRecipe() async throws -> RecipeResponse {
+    func fetchRecipes() async throws -> RecipeResponse {
         guard let endpoint = recipeUrl else {
             throw APIError.requestFailed(msg: "Invalid URL")
         }

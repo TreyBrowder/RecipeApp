@@ -17,7 +17,7 @@ struct AllRecipeView: View {
     var body: some View {
         NavigationStack() {
             List {
-                ForEach(recipeVM.recipeArr) { recipe in // currently hold 63 items 
+                ForEach(recipeVM.filteredMeals) { recipe in // currently hold 63 items 
                     NavigationLink(value: recipe) {
                         HStack {
                             RecipeImgView(url: recipe.imgSM)
@@ -30,17 +30,19 @@ struct AllRecipeView: View {
                     }
                 }
             }
-            .refreshable {
-                //This is where any update to the data would happen by fetching more recipes
-                await recipeVM.getRecipes(isRefreshing: true)
-                
-            }
+            .listStyle(.plain)
+            .searchable(text: $recipeVM.searchedText)
             .navigationTitle("Recipes")
             .hideBackButtonTitle()
             .navigationDestination(for: Recipe.self) { recipe in
                 RecipeDetails(recipeVM: recipeVM, recipe: recipe)
                     .navigationTitle(recipe.name)
                     .navigationBarTitleDisplayMode(.inline)
+            }
+            .refreshable {
+                //This is where any update to the data would happen by fetching more recipes
+                await recipeVM.getRecipes(isRefreshing: true)
+                
             }
         }
         .task {
